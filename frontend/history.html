@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis History | HireShield</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <a href="index.html" class="brand">
+            <span class="brand-mark">H</span>
+            <span>HireShield</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="check-job.html">Check a Job</a>
+            <a href="history.html" class="active">History</a>
+            <a href="about.html">About</a>
+        </nav>
+    </header>
+
+    <main class="history-main">
+
+        <section class="history-section" id="history">
+
+            <div class="history-hero">
+                <span class="eyebrow">YOUR ACTIVITY</span>
+                <h1>Analysis History</h1>
+                <p>
+                    Your previous job analyses, all in one place.
+                    Review risk reports and revisit your earlier decisions.
+                </p>
+            </div>
+
+            <section class="history-content">
+
+                <div class="history-header">
+                    <div>
+                        <span class="eyebrow">YOUR RECORDS</span>
+                        <h2>Previous Analyses</h2>
+                        <p>Review and manage your analyzed job postings.</p>
+                    </div>
+
+                    <button type="button" id="loadHistoryBtn">
+                        Refresh History
+                    </button>
+                </div>
+
+                <div id="historyList" class="history-list">
+                    <p>Loading your analysis history...</p>
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 HireShield. Make safer career decisions.</p>
+    </footer>
+
+    <script src="history.js"></script>
+
+</body>
+</html>

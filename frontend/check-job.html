@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check a Job | HireShield</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="brand">
+            <span class="brand-mark">H</span>
+            <span>HireShield</span>
+        </div>
+
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="check-job.html" class="active">Check a Job</a>
+            <a href="history.html">History</a>
+            <a href="about.html">About</a>
+        </nav>
+    </header>
+
+    <main class="check-job-main">
+
+        <section class="analysis-section" id="analyze">
+
+            <div class="check-hero">
+                <span class="eyebrow">JOB SAFETY ANALYSIS</span>
+                <h1>Check before you trust.</h1>
+                <p>
+                    Analyze a job posting to identify potential fraud indicators
+                    and understand the risks before applying.
+                </p>
+            </div>
+
+            <!-- PDF Analysis -->
+            <section class="pdf-upload-panel">
+
+                <div class="panel-heading">
+                    <span class="eyebrow">QUICK ANALYSIS</span>
+                    <h2>Have a job description PDF?</h2>
+                    <p>Upload the document and let HireShield examine its details.</p>
+                </div>
+
+                <form id="pdfForm" class="pdf-form">
+
+                    <div class="form-group">
+                        <label for="pdf_job_title">Job Title</label>
+                        <input
+                            type="text"
+                            id="pdf_job_title"
+                            placeholder="e.g. Software Engineer"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pdf_company_name">Company Name</label>
+                        <input
+                            type="text"
+                            id="pdf_company_name"
+                            placeholder="Enter company name"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group pdf-file-group">
+                        <label for="jobPdf">Upload Job PDF</label>
+                        <input
+                            type="file"
+                            id="jobPdf"
+                            accept=".pdf,application/pdf"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" id="pdfAnalyzeBtn">
+                        Analyze PDF
+                    </button>
+
+                </form>
+            </section>
+
+            <!-- Manual Analysis -->
+            <section class="manual-analysis-panel">
+
+                <div class="panel-heading manual-heading">
+                    <span class="eyebrow">MANUAL ANALYSIS</span>
+                    <h2>Enter Job Details</h2>
+                    <p>
+                        Add the information from the job posting.
+                        Fields marked optional can be left blank.
+                    </p>
+                </div>
+
+                <form id="jobForm" class="job-form">
+
+                    <div class="form-group">
+                        <label for="job_title">Job Title</label>
+                        <input
+                            type="text"
+                            id="job_title"
+                            placeholder="e.g. Software Engineer"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company_name">Company Name</label>
+                        <input
+                            type="text"
+                            id="company_name"
+                            placeholder="Enter company name"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="job_description">Job Description</label>
+                        <textarea
+                            id="job_description"
+                            rows="7"
+                            placeholder="Paste the complete job description..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company_website">Company Website (Optional)</label>
+                        <input
+                            type="url"
+                            id="company_website"
+                            placeholder="https://example.com"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company_profile">Company Profile (Optional)</label>
+                        <textarea
+                            id="company_profile"
+                            rows="3"
+                            placeholder="Company information..."
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="requirements">Requirements (Optional)</label>
+                        <textarea
+                            id="requirements"
+                            rows="3"
+                            placeholder="Skills and qualifications..."
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="benefits">Benefits (Optional)</label>
+                        <textarea
+                            id="benefits"
+                            rows="3"
+                            placeholder="Salary, benefits and other details..."
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employment_type">Employment Type (Optional)</label>
+                        <input
+                            type="text"
+                            id="employment_type"
+                            placeholder="Full-time, Part-time, Contract..."
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="required_experience">Required Experience (Optional)</label>
+                        <input
+                            type="text"
+                            id="required_experience"
+                            placeholder="e.g. 2 years"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="required_education">Required Education (Optional)</label>
+                        <input
+                            type="text"
+                            id="required_education"
+                            placeholder="e.g. Bachelor's degree"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="industry">Industry (Optional)</label>
+                        <input
+                            type="text"
+                            id="industry"
+                            placeholder="e.g. Information Technology"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="function">Job Function (Optional)</label>
+                        <input
+                            type="text"
+                            id="function"
+                            placeholder="e.g. Engineering"
+                        >
+                    </div>
+
+                    <div class="form-actions full-width">
+                        <button type="submit" id="analyzeBtn">
+                            Analyze Job
+                        </button>
+                    </div>
+
+                </form>
+            </section>
+
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 HireShield. Make safer career decisions.</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
+
