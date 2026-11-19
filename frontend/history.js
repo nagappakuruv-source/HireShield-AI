@@ -1,5 +1,5 @@
 
-const API_BASE_URL = "http://hireshield-ai-j55j.onrender.com";
+const API_BASE_URL = "https://hireshield-ai-j55j.onrender.com";
 
 const loadHistoryBtn = document.getElementById("loadHistoryBtn");
 const historyList = document.getElementById("historyList");
