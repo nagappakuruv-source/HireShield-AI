@@ -2,76 +2,64 @@
 from backend.database.connection import get_connection
 
 
-
 def get_analysis_history(limit=10, offset=0):
 
     connection = get_connection()
-    cursor = connection.cursor()
 
-    cursor.execute("""
-        SELECT *
-        FROM analysis_history
-        ORDER BY created_at DESC
-        LIMIT ? OFFSET ?
-    """, (limit, offset))
+    try:
+        with connection.cursor() as cursor:
 
-    records = cursor.fetchall()
+            cursor.execute("""
+                SELECT *
+                FROM analysis_history
+                ORDER BY created_at DESC
+                LIMIT %s OFFSET %s
+            """, (limit, offset))
 
-    connection.close()
+            records = cursor.fetchall()
 
-    return [dict(record) for record in records]
+            return records
 
+    finally:
+        connection.close()
 
-if __name__ == "__main__":
-
-    history = get_analysis_history()
-
-    print("\nHIREShield AI - HISTORY SERVICE")
-    print("--------------------------------")
-
-    for record in history:
-        print(record)
 
 def get_analysis_by_id(analysis_id):
 
     connection = get_connection()
-    cursor = connection.cursor()
 
-    cursor.execute("""
-        SELECT *
-        FROM analysis_history
-        WHERE id = ?
-    """, (analysis_id,))
+    try:
+        with connection.cursor() as cursor:
 
-    record = cursor.fetchone()
+            cursor.execute("""
+                SELECT *
+                FROM analysis_history
+                WHERE id = %s
+            """, (analysis_id,))
 
-    connection.close()
+            record = cursor.fetchone()
 
-    if record:
-        return dict(record)
+            return record
 
-    return None
-if __name__ == "__main__":
+    finally:
+        connection.close()
 
-    analysis = get_analysis_by_id(3)
-
-    if analysis:
-        print("Analysis Found:")
-        print(analysis)
-    else:
-        print("Analysis not found")
 
 def get_total_analysis_count():
 
     connection = get_connection()
-    cursor = connection.cursor()
 
-    cursor.execute("""
-        SELECT COUNT(*) FROM analysis_history
-    """)
+    try:
+        with connection.cursor() as cursor:
 
-    total = cursor.fetchone()[0]
+            cursor.execute("""
+                SELECT COUNT(*) AS total
+                FROM analysis_history
+            """)
 
-    connection.close()
+            result = cursor.fetchone()
 
-    return total
+            return result["total"]
+
+    finally:
+        connection.close()
