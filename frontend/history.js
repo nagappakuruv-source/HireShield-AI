@@ -3,6 +3,10 @@ const API_BASE_URL = "https://hireshield-ai-j55j.onrender.com";
 
 const loadHistoryBtn = document.getElementById("loadHistoryBtn");
 const historyList = document.getElementById("historyList");
+const historySearch = document.getElementById("historySearch");
+const riskFilter = document.getElementById("riskFilter");
+const searchHistoryBtn = document.getElementById("searchHistoryBtn");
+const clearHistoryFiltersBtn = document.getElementById("clearHistoryFiltersBtn");
 
 let currentHistoryPage = 1;
 let totalHistoryPages = 1;
@@ -12,10 +16,29 @@ async function loadHistory(page = 1) {
     historyList.textContent = "Loading analysis history...";
 
     try {
-        const response = await fetch(
-            `${API_BASE_URL}/history?page=${page}&limit=10`
-        );
+      const keyword = historySearch.value.trim();
+const selectedRisk = riskFilter.value;
 
+const hasFilters = keyword || selectedRisk;
+
+const params = new URLSearchParams({
+    page: String(page),
+    limit: "10"
+});
+
+if (keyword) {
+    params.set("keyword", keyword);
+}
+
+if (selectedRisk) {
+    params.set("risk_level", selectedRisk);
+}
+
+const endpoint = hasFilters ? "/history/search" : "/history";
+
+const response = await fetch(
+    `${API_BASE_URL}${endpoint}?${params.toString()}`
+);
         const data = await response.json();
 
         if (!response.ok) {
@@ -264,6 +287,14 @@ function updatePagination(page) {
 }
 
 loadHistoryBtn.addEventListener("click", () => loadHistory(1));
+searchHistoryBtn.addEventListener("click", () => {
+    loadHistory(1);
+});
 
+clearHistoryFiltersBtn.addEventListener("click", () => {
+    historySearch.value = "";
+    riskFilter.value = "";
+    loadHistory(1);
+});
 // Load history automatically when the page opens.
 loadHistory(1);
