@@ -29,16 +29,19 @@ app = FastAPI(
     description="AI-powered Job Fraud Detection and Company Verification",
     version="1.0.0"
 )
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://127.0.0.1:5500",
-        "http://localhost:5500"
+        "http://localhost:5500",
+        "https://hireshield-ai-frontend.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 model = load_model()
 
 

@@ -1,4 +1,4 @@
-const API_URL = "http://hireshield-ai-j55j.onrender.com/analyze";
+const API_URL = "https://hireshield-ai-j55j.onrender.com/analyze";
 const jobForm = document.getElementById("jobForm");
 const analyzeBtn = document.getElementById("analyzeBtn");
 
@@ -294,7 +294,7 @@ pdfForm.addEventListener("submit", async (event) => {
 
     try {
         const response = await fetch(
-           "http://hireshield-ai-j55j.onrender.com/analyze-pdf",
+           "https://hireshield-ai-j55j.onrender.com/analyze-pdf",
             {
                 method: "POST",
                 body: formData
@@ -445,7 +445,7 @@ async function loadHistory(page = 1) {
 
     try {
         const response = await fetch(
-            `http://hireshield-ai-j55j.onrender.com/history?page=${page}&limit=10`
+            `https://hireshield-ai-j55j.onrender.com/history?page=${page}&limit=10`
         );
 
         const data = await response.json();
@@ -511,7 +511,7 @@ async function loadHistory(page = 1) {
 
                     try {
                         const reportResponse = await fetch(
-                            `http://hireshield-ai-j55j.onrender.com/history/${item.id}`
+                            `https://hireshield-ai-j55j.onrender.com/history/${item.id}`
                         );
 
                         const reportData = await reportResponse.json();
@@ -569,7 +569,7 @@ async function loadHistory(page = 1) {
 
                 try {
                     const deleteResponse = await fetch(
-                        `http://hireshield-ai-j55j.onrender.com/history/${item.id}`,
+                        `https://hireshield-ai-j55j.onrender.com/history/${item.id}`,
                         { method: "DELETE" }
                     );
 
