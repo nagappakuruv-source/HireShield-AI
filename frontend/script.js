@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/analyze";
+const API_URL = "http://hireshield-ai-j55j.onrender.com/analyze";
 const jobForm = document.getElementById("jobForm");
 const analyzeBtn = document.getElementById("analyzeBtn");
 
@@ -21,7 +21,102 @@ function addResultText(parent, label, value) {
     parent.appendChild(paragraph);
 }
 
-jobForm.addEventListener("submit", async (event) => {
+function renderAIExplanation(parent, rawText) {
+    parent.replaceChildren();
+
+    const normalized = String(rawText || "")
+        .replace(/\\(?=#{1,6}\s)/g, "")
+        .trim();
+
+    const lines = normalized.split(/\r?\n/);
+
+    let currentList = null;
+    let currentListType = null;
+
+    function closeList() {
+        currentList = null;
+        currentListType = null;
+    }
+
+    function cleanText(value) {
+        return value
+            .replace(/\*\*/g, "")
+            .replace(/\*/g, "")
+            .replace(/__/g, "")
+            .replace(/`/g, "")
+            .trim();
+    }
+
+    lines.forEach((line) => {
+        const text = line.trim();
+
+        if (!text) {
+            closeList();
+            return;
+        }
+
+        const headingMatch = text.match(/^#{1,6}\s+(.+)$/);
+        const numberedHeading = text.match(/^([1-4])[.)]\s+(.+)$/);
+
+        const sectionNames = [
+            "overall risk explanation",
+            "suspicious warning signs",
+            "company verification observations",
+            "safety recommendations"
+        ];
+
+        const isSectionHeading =
+            numberedHeading &&
+            sectionNames.some(name =>
+                numberedHeading[2].toLowerCase().includes(name)
+            );
+
+        if (headingMatch || isSectionHeading) {
+            closeList();
+
+            const heading = document.createElement("h4");
+            heading.textContent = cleanText(
+                headingMatch
+                    ? headingMatch[1]
+                    : `${numberedHeading[1]}. ${numberedHeading[2]}`
+            );
+
+            parent.appendChild(heading);
+            return;
+        }
+
+        const numberedMatch = text.match(/^\d+[.)]\s+(.+)$/);
+        const bulletMatch = text.match(/^[-*]\s+(.+)$/);
+
+        if (numberedMatch || bulletMatch) {
+            const listType = numberedMatch ? "ol" : "ul";
+
+            if (currentListType !== listType) {
+                closeList();
+                currentList = document.createElement(listType);
+                parent.appendChild(currentList);
+                currentListType = listType;
+            }
+
+            const item = document.createElement("li");
+            item.textContent = cleanText(
+                numberedMatch ? numberedMatch[1] : bulletMatch[1]
+            );
+
+            currentList.appendChild(item);
+            return;
+        }
+
+        closeList();
+
+        const paragraph = document.createElement("p");
+        paragraph.textContent = cleanText(text);
+        parent.appendChild(paragraph);
+    });
+}
+
+
+ jobForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const jobData = {
@@ -59,7 +154,7 @@ jobForm.addEventListener("submit", async (event) => {
 
        const data = await response.json();
 
-console.log("FULL MANUAL ANALYSIS RESPONSE:", data);
+ console.log("FULL MANUAL ANALYSIS RESPONSE:", data);
         if (!response.ok) {
             throw new Error(data.detail || "Unable to analyze this job.");
         }
@@ -136,87 +231,13 @@ resultSection.appendChild(mlPrediction);
         explanationHeading.textContent = "AI Explanation";
         resultSection.appendChild(explanationHeading);
 
-        const explanation = document.createElement("div");
+     const explanation = document.createElement("div");
 explanation.className = "ai-explanation";
 
 const explanationText =
     data.ai_explanation || "AI explanation is not available.";
 
-
-
-
-const normalizedExplanation = String(explanationText)
-      .replace(/\\(?=#{1,6}\s)/g, "")
-    .replace(/\\([*_`])/g, "$1")
-    .replace(/\\([.!?])/g, "$1");
-    
-const lines = normalizedExplanation
-    .replace(/([^\n])\s+(?=#{1,6}\s)/g, "$1\n")
-    .replace(/([^\n])\s+(?=\d+[.)]\s)/g, "$1\n")
-    .split(/\r?\n/);
-
-let currentList = null;
-let currentListType = null;
-
-function closeCurrentList() {
-    currentList = null;
-    currentListType = null;
-}
-
-lines.forEach((line) => {
-    const text = line.trim();
-
-    if (!text) {
-        closeCurrentList();
-        return;
-    }
-
-    const cleanText = (value) =>
-        value
-            .replace(/\*\*/g, "")
-            .replace(/\*/g, "")
-            .replace(/`/g, "")
-            .trim();
-
-    const headingMatch = text.match(/^#{1,6}\s+(.+)$/);
-    const numberedMatch = text.match(/^\d+[.)]\s+(.+)$/);
-    const bulletMatch = text.match(/^[-*]\s+(.+)$/);
-
-    if (headingMatch) {
-        closeCurrentList();
-
-        const heading = document.createElement("h4");
-        heading.textContent = cleanText(headingMatch[1]);
-        explanation.appendChild(heading);
-
-    } else if (numberedMatch || bulletMatch) {
-        const listType = numberedMatch ? "ol" : "ul";
-
-        if (currentListType !== listType) {
-            closeCurrentList();
-
-            currentList = document.createElement(listType);
-            explanation.appendChild(currentList);
-            currentListType = listType;
-        }
-
-        const item = document.createElement("li");
-
-        item.textContent = cleanText(
-            numberedMatch ? numberedMatch[1] : bulletMatch[1]
-        );
-
-        currentList.appendChild(item);
-
-    } else {
-        closeCurrentList();
-
-        const paragraph = document.createElement("p");
-        paragraph.textContent = cleanText(text);
-
-        explanation.appendChild(paragraph);
-    }
-});
+renderAIExplanation(explanation, explanationText);
 
 resultSection.appendChild(explanation);
 
@@ -273,7 +294,7 @@ pdfForm.addEventListener("submit", async (event) => {
 
     try {
         const response = await fetch(
-           "http://127.0.0.1:8000/analyze-pdf",
+           "http://hireshield-ai-j55j.onrender.com/analyze-pdf",
             {
                 method: "POST",
                 body: formData
@@ -377,83 +398,7 @@ explanation.className = "ai-explanation";
 const explanationText =
     data.ai_explanation || "AI explanation is not available.";
 
-const normalizedExplanation = String(explanationText)
-    .replace(/\\(?=#{1,6}\s)/g, "")
-    .replace(/\\([*`_])/g, "$1")
-    .replace(/\\([.!?])/g, "$1");
-const lines = normalizedExplanation
-    .replace(/([^\n])\s+(?=#{1,6}\s)/g, "$1\n")
-    .replace(/([^\n])\s+(?=\d+\.\s)/g, "$1\n")
-    .split(/\r?\n/);
-let currentList = null;
-let currentListType = null;
-
-function closeCurrentList() {
-    currentList = null;
-    currentListType = null;
-}
-
-
-lines.forEach((line) => {
-    const text = line.trim();
-
-    if (!text) {
-        closeCurrentList();
-        return;
-    }
-
-    const cleanText = (value) =>
-        value
-            .replace(/\*\*/g, "")
-            .replace(/\*/g, "")
-            .replace(/`/g, "")
-            .trim();
-
-    const headingMatch = text.match(/^#{1,6}\s+(.+)$/);
-  const boldNumberedHeadingMatch =
-    text.match(/^\*\*\s*(\d+[.)]\s+.+?)\s*\*\*$/);
-    const numberedMatch = text.match(/^\d+[.)]\s+(.+)$/);
-    const bulletMatch = text.match(/^[-*]\s+(.+)$/);
-
-    if (headingMatch || boldNumberedHeadingMatch) {
-        closeCurrentList();
-
-        const heading = document.createElement("h4");
-        heading.textContent = cleanText(
-            headingMatch ? headingMatch[1] : boldNumberedHeadingMatch[1]
-        );
-
-        explanation.appendChild(heading);
-
-    } else if (numberedMatch || bulletMatch) {
-        const listType = numberedMatch ? "ol" : "ul";
-
-        if (currentListType !== listType) {
-            closeCurrentList();
-
-            currentList = document.createElement(listType);
-            explanation.appendChild(currentList);
-            currentListType = listType;
-        }
-
-        const item = document.createElement("li");
-
-        item.textContent = cleanText(
-            numberedMatch ? numberedMatch[1] : bulletMatch[1]
-        );
-
-        currentList.appendChild(item);
-
-    } else {
-        closeCurrentList();
-
-        const paragraph = document.createElement("p");
-        paragraph.textContent = cleanText(text);
-
-        explanation.appendChild(paragraph);
-    }
-});
-
+renderAIExplanation(explanation, explanationText);
 
 container.append(
     heading,
@@ -500,7 +445,7 @@ async function loadHistory(page = 1) {
 
     try {
         const response = await fetch(
-            `http://127.0.0.1:8000/history?page=${page}&limit=10`
+            `http://hireshield-ai-j55j.onrender.com/history?page=${page}&limit=10`
         );
 
         const data = await response.json();
@@ -566,7 +511,7 @@ async function loadHistory(page = 1) {
 
                     try {
                         const reportResponse = await fetch(
-                            `http://127.0.0.1:8000/history/${item.id}`
+                            `http://hireshield-ai-j55j.onrender.com/history/${item.id}`
                         );
 
                         const reportData = await reportResponse.json();
@@ -624,7 +569,7 @@ async function loadHistory(page = 1) {
 
                 try {
                     const deleteResponse = await fetch(
-                        `http://127.0.0.1:8000/history/${item.id}`,
+                        `http://hireshield-ai-j55j.onrender.com/history/${item.id}`,
                         { method: "DELETE" }
                     );
 
