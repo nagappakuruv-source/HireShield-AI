@@ -1,19 +1,30 @@
+
 from backend.database.connection import get_connection
 
 
 def delete_analysis(analysis_id):
 
     connection = get_connection()
-    cursor = connection.cursor()
 
-    cursor.execute("""
-        DELETE FROM analysis_history
-        WHERE id = ?
-    """, (analysis_id,))
+    try:
+        with connection.cursor() as cursor:
 
-    deleted = cursor.rowcount
+            cursor.execute("""
+                DELETE FROM analysis_history
+                WHERE id = %s
+            """, (analysis_id,))
 
-    connection.commit()
-    connection.close()
+            deleted = cursor.rowcount
 
-    return deleted > 0
+        connection.commit()
+
+        return deleted > 0
+
+    except Exception as error:
+
+        connection.rollback()
+        print("Database Delete Error:", error)
+        raise
+
+    finally:
+        connection.close()

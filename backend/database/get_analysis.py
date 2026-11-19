@@ -1,5 +1,4 @@
-import sqlite3
-from backend.database.connection import get_connection
+
 from backend.database.connection import get_connection
 
 
@@ -9,18 +8,20 @@ def get_all_analyses():
 
     try:
         connection = get_connection()
-        cursor = connection.cursor()
 
-        cursor.execute("""
-            SELECT * FROM analysis_history
-            ORDER BY created_at DESC
-        """)
+        with connection.cursor() as cursor:
 
-        records = cursor.fetchall()
+            cursor.execute("""
+                SELECT *
+                FROM analysis_history
+                ORDER BY created_at DESC
+            """)
+
+            records = cursor.fetchall()
 
         return records
 
-    except sqlite3.Error as error:
+    except Exception as error:
 
         print("Database Retrieval Error:", error)
         raise
@@ -29,11 +30,13 @@ def get_all_analyses():
 
         if connection:
             connection.close()
+
+
 if __name__ == "__main__":
 
     analyses = get_all_analyses()
 
-    print("\nHIREShield AI - ANALYSIS HISTORY")
+    print("\nHIRESHIELD AI - ANALYSIS HISTORY")
     print("--------------------------------")
 
     for analysis in analyses:

@@ -6,35 +6,42 @@ def create_tables():
 
     connection = get_connection()
 
-    cursor = connection.cursor()
+    try:
+        with connection.cursor() as cursor:
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS analysis_history (
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS analysis_history (
 
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id SERIAL PRIMARY KEY,
 
-            job_title TEXT NOT NULL,
+                    job_title TEXT NOT NULL,
 
-            company_name TEXT NOT NULL,
+                    company_name TEXT NOT NULL,
 
-            job_description TEXT,
+                    job_description TEXT,
 
-            prediction INTEGER,
+                    prediction INTEGER,
 
-            result TEXT,
+                    result TEXT,
 
-            risk_score INTEGER,
+                    risk_score INTEGER,
 
-            risk_level TEXT,
+                    risk_level TEXT,
 
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
 
-    connection.commit()
-    connection.close()
+        connection.commit()
 
-    print("Analysis history table created successfully!")
+        print("Analysis history table created successfully!")
+
+    except Exception:
+        connection.rollback()
+        raise
+
+    finally:
+        connection.close()
 
 
 if __name__ == "__main__":
