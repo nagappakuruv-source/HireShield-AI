@@ -1,28 +1,23 @@
 
-import sqlite3
-from pathlib import Path
+import os
+import psycopg
+from psycopg.rows import dict_row
+from dotenv import load_dotenv
 
-# Get the project root directory
-BASE_DIR = Path(__file__).resolve().parents[2]
+# Load environment variables from .env
+load_dotenv()
 
-# Database file location
-DATABASE_PATH = BASE_DIR / "hireshield.db"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 def get_connection():
-    connection = sqlite3.connect(DATABASE_PATH)
 
-    # Return rows as dictionary-like objects
-    connection.row_factory = sqlite3.Row
+    if not DATABASE_URL:
+        raise RuntimeError("DATABASE_URL is not configured.")
+
+    connection = psycopg.connect(
+        DATABASE_URL,
+        row_factory=dict_row
+    )
 
     return connection
-
-
-if __name__ == "__main__":
-
-    connection = get_connection()
-
-    print("Database connected successfully!")
-    print("Database location:", DATABASE_PATH)
-
-    connection.close()
